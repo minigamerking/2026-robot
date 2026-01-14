@@ -30,9 +30,9 @@ public class Turret extends SubsystemBase {
         this.turretMotor = new TalonFX(turretID);
 
         this.anglePidController = new PIDController(
-            TurretConstants.turretP,
-            TurretConstants.turretI,
-            TurretConstants.turretD
+            TurretConstants.TURRETP,
+            TurretConstants.TURRETI,
+            TurretConstants.TURRETD
         );
 
         this.anglePidController.setSetpoint(0);
@@ -40,7 +40,7 @@ public class Turret extends SubsystemBase {
         this.absEncoder = new CANcoder(encoderID);
         this.absEncoderReversed = absEncoderReversed;
 
-        // Setup preferences (only temporary since it will be deleted after first initialization)
+        // Setup preferences (this code is temporary since it will be deleted after first initialization)
         if (Preferences.getDouble("TurretZero", 200) == 200) {
             Preferences.initDouble("TurretZero", 0);
         }
