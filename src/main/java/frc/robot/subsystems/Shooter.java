@@ -6,12 +6,15 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
 
   private final TalonFX shooterMotorOne;
   private final TalonFX shooterMotorTwo;
+
+  public final Shooter.Commands commands = new Commands();
   
 
   /** Creates a new ExampleSubsystem. */
@@ -31,6 +34,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public class Commands {
-    
+    public Command shoot(double speed) {
+      return Shooter.this.runOnce(
+        () -> Shooter.this.setSpeed(speed)
+      );
+    }
   }
 }
