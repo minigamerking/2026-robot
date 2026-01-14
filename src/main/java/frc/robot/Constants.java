@@ -17,12 +17,17 @@ public final class Constants {
     public static final int DRIVERCONTROLLERPORT = 0;
   }
 
-  public static class SubsystemConstants {
+  public static class ShooterConstants {
     public static final int SHOOTERMOTORONEID = 1;
     public static final int SHOOTERMOTORTWOID = 2;
-
+  }
+  
+  public static class TurretConstants {
     public static final int turretP = 1;
     public static final int turretI = 0;
     public static final int turretD = 0;
+
+    public static final double TURRETMAXANGLE = 90;
+    public static final double TURRETMINANGLE = 0;
   }
 }

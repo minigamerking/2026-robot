@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.SubsystemConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ShooterSpeed;
 import frc.robot.subsystems.Shooter;
@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Shooter shooter = new Shooter(SubsystemConstants.SHOOTERMOTORONEID, SubsystemConstants.SHOOTERMOTORTWOID);
+  private final Shooter shooter = new Shooter(ShooterConstants.SHOOTERMOTORONEID, ShooterConstants.SHOOTERMOTORTWOID);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
