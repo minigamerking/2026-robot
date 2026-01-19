@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +27,7 @@ public class Shooter extends SubsystemBase {
 
   public void setSpeed(double speed) {
     this.shooterMotorOne.set(speed);
-    this.shooterMotorTwo.set(speed);
+    this.shooterMotorTwo.set(-speed);
   }
 
   @Override
@@ -33,10 +35,19 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public Command setSpeedCommand(DoubleSupplier supplier) {
+    return this.runOnce(
+      () -> {
+        this.shooterMotorOne.set(supplier.getAsDouble());
+        this.shooterMotorTwo.set(-supplier.getAsDouble());
+      }
+    );
+  }
+
   public class Commands {
-    public Command shoot(double speed) {
+    public Command shoot(DoubleSupplier supplier) {
       return Shooter.this.runOnce(
-        () -> Shooter.this.setSpeed(speed)
+        () -> Shooter.this.setSpeed(supplier.getAsDouble())
       );
     }
   }

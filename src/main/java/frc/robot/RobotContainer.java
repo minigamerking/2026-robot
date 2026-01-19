@@ -21,6 +21,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Sets the shooter to always respond to the trigger
-    this.driverController.rightTrigger().whileTrue(this.shooter.commands.shoot(this.driverController.getRightTriggerAxis()));
+    this.shooter.setDefaultCommand(
+      this.shooter.commands.shoot(() -> this.driverController.getRightTriggerAxis())
+    );
+    //this.driverController.rightTrigger().whileTrue(this.shooter.commands.shoot(this.driverController.getRightTriggerAxis()));
   }
 }
