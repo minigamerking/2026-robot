@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -20,6 +21,8 @@ public class SwerveModule {
     private final TalonFX turningMotor;
 
     private final PIDController turningPidController;
+    private final PIDController driveVelocityPidController;
+    private final SlewRateLimiter driveVelocityLimiter = new SlewRateLimiter(3);;
 
     private final CANcoder absoluteEncoder;
     private final boolean absoluteEncoderReversed;
@@ -55,8 +58,15 @@ public class SwerveModule {
         );
         this.turningPidController.enableContinuousInput(-180, 180);
         this.turningPidController.setTolerance(0.2);
+        
+        this.driveVelocityPidController = new PIDController(
+            Preferences.getDouble("Module" + this.swerveID + "VelocityP", 1),
+            0,
+            0
+        );
+        this.driveVelocityPidController.setTolerance(0.2);
 
-        this.driveRotationToMeter = (gearRatio == 1) ? SwerveConstants.DRIVEROTATION2METER1 : (gearRatio == 2) ? SwerveConstants.DRIVEROTATION2METER2 : SwerveConstants.DRIVEROTATION2METER3;
+        this.driveRotationToMeter = (gearRatio == 1) ? SwerveConstants.ROTATIONSTOMETERSR1 : (gearRatio == 2) ? SwerveConstants.ROTATIONSTOMETERSR2 : SwerveConstants.ROTATIONSTOMETERSR3;
         this.driveMaxSpeed = (gearRatio == 1) ? SwerveConstants.PHYSICALMAXSPEEDMPERSECR1 : (gearRatio == 2) ? SwerveConstants.PHYSICALMAXSPEEDMPERSECR2 : SwerveConstants.PHYSICALMAXSPEEDMPERSECR3;
 
         this.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(getAbsoluteEncoderDeg())));
@@ -119,9 +129,11 @@ public class SwerveModule {
     }
 
     public void periodic() {
+        double limitedSpeed = driveVelocityLimiter.calculate(this.state.speedMetersPerSecond);
+        this.driveVelocityPidController.setSetpoint(limitedSpeed);
         //System.out.println(this.swerveID + " Desired Angle: " + this.state.angle.getDegrees());
-        this.driveMotor.set(this.state.speedMetersPerSecond / SwerveConstants.PHYSICALMAXSPEEDMPERSECR1);
-        this.turningMotor.set(this.turningPidController.calculate(getAbsoluteEncoderDeg()));
+        this.driveMotor.set(this.driveVelocityPidController.calculate(this.getDriveVelocity()) / this.driveMaxSpeed);
+        this.turningMotor.setVoltage(this.turningPidController.calculate(getAbsoluteEncoderDeg()));
         SmartDashboard.putNumber(this.swerveID + " Module Angle: ", getAbsoluteEncoderDeg());
     }
 

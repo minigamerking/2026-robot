@@ -17,6 +17,8 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class OperatorConstants {
     public static final int DRIVERCONTROLLERPORT = 0;
+
+    public static final double DEADBAND = 0.05;
   }
 
   public static class ShooterConstants {
@@ -49,8 +51,8 @@ public final class Constants {
     public static final double DRIVEMOTORGEARRATIOR3 = 5.27;
     public static final double STEERINGGEARRATIO = 26;
 
-    public static final double DRIVEROTATION2METER1 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR1;
-    public static final double DRIVEROTATION2METER2 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR2;
-    public static final double DRIVEROTATION2METER3 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR3;
+    public static final double ROTATIONSTOMETERSR1 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR1;
+    public static final double ROTATIONSTOMETERSR2 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR2;
+    public static final double ROTATIONSTOMETERSR3 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR3;
   }
 }
