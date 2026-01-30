@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -37,6 +39,8 @@ public final class Constants {
 
   public static class SwerveConstants {
     public static final double WHEELDIAMETERMETERS = Units.inchesToMeters(4);
+    public static final double WHEELBASELENGTH = Units.inchesToMeters(27.125);
+    public static final double WHEELBASEWIDTH = Units.inchesToMeters(16);
 
     public static final int SWERVETURNINGP = 1;
     public static final int SWERVETURNINGI = 0;
@@ -54,5 +58,43 @@ public final class Constants {
     public static final double ROTATIONSTOMETERSR1 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR1;
     public static final double ROTATIONSTOMETERSR2 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR2;
     public static final double ROTATIONSTOMETERSR3 = (WHEELDIAMETERMETERS * Math.PI) / DRIVEMOTORGEARRATIOR3;
+
+    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+                new Translation2d(WHEELBASELENGTH / 2, WHEELBASEWIDTH / 2),
+                new Translation2d(WHEELBASELENGTH / 2, -WHEELBASEWIDTH / 2),
+                new Translation2d(-WHEELBASELENGTH / 2, WHEELBASEWIDTH / 2),
+                new Translation2d(-WHEELBASELENGTH / 2, -WHEELBASEWIDTH / 2));
+
+        public static final int FRONTLEFTDRIVEMOTORPORT = 1;
+        public static final int FRONTLEFTTURNMOTORPORT = 5;
+
+        public static final int FRONTRIGHTDRIVEMOTORPORT = 3;
+        public static final int FRONTRIGHTTURNMOTORPORT = 7;
+
+        public static final int BACKLEFTDRIVEMOTORPORT = 2;
+        public static final int BACKLEFTTURNMOTORPORT = 6;
+
+        public static final int BACKRIGHTDRIVEMOTORPORT = 4;
+        public static final int BACKRIGHTTURNMOTORPORT = 8;
+
+        public static final boolean FRONTLEFTDRIVEENCODERREVERSED = false;
+        public static final boolean FRONTRIGHTDRIVEENCODERREVERSED = false;
+        public static final boolean BACKLEFTDRIVEENCODERREVERSED = false;
+        public static final boolean BACKRIGHTDRIVEENCODERREVERSED = false;
+
+        public static final int FRONTLEFTABSENCODERPORT = 9;
+        public static final int FRONTRIGHTABSENCODERPORT = 11;
+        public static final int BACKLEFTABSENCODERPORT = 10;
+        public static final int BACKRIGHTABSENCODERPORT = 12;
+
+        public static final boolean FRONTLEFTABSENCODERREVERSED = true;
+        public static final boolean FRONTRIGHTABSENCODERREVERSED = true;
+        public static final boolean BACKLEFTABSENCODERREVERSED = true;
+        public static final boolean BACKRIGHTABSENCODERREVERSED = true;
+
+        public static final double FRONTLEFTABSENCODEROFFSET = -1.270128;
+        public static final double FRONTRIGHTABSENCODEROFFSET = -1.244053;
+        public static final double BACKLEFTABSENCODEROFFSET = -0.1702743;
+        public static final double BACKRIGHTABSENCODEROFFSET = 1.935884;
   }
 }

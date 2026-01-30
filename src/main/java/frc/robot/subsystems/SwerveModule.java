@@ -34,7 +34,7 @@ public class SwerveModule {
     private final double driveRotationToMeter;
     private final double driveMaxSpeed;
 
-    public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
+    public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed,
             int absoluteEncoderId, boolean absoluteEncoderReversed, int swerveID, int gearRatio) {
 
         this.swerveID = swerveID;
@@ -49,7 +49,7 @@ public class SwerveModule {
         this.turningMotor = new TalonFX(turningMotorId);
 
         this.driveMotor.getConfigurator().apply(getDriveConfig(driveMotorReversed));
-        this.turningMotor.getConfigurator().apply(getTurningConfig(turningMotorReversed));
+        this.turningMotor.getConfigurator().apply(getTurningConfig());
 
         this.turningPidController = new PIDController(
             Preferences.getDouble("Module" + this.swerveID + "P", SwerveConstants.SWERVETURNINGP),
@@ -81,11 +81,8 @@ public class SwerveModule {
         return config;
     }
 
-    private TalonFXConfiguration getTurningConfig(boolean reversed) {
+    private TalonFXConfiguration getTurningConfig() {
         TalonFXConfiguration config = new TalonFXConfiguration();
-
-        config.MotorOutput
-            .Inverted = reversed ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
         
         return config;
     }
