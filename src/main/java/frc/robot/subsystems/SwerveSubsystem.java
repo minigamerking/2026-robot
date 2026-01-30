@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.util.FunctionUtilities;
 
 import static edu.wpi.first.units.Units.Volts;
 
