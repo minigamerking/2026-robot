@@ -19,7 +19,6 @@ public class Shooter extends SubsystemBase {
   public final Shooter.Commands commands = new Commands();
   
 
-  /** Creates a new ExampleSubsystem. */
   public Shooter(int shooterIDOne, int shooterIDTwo) {
     this.shooterMotorOne = new TalonFX(shooterIDOne);
     this.shooterMotorTwo = new TalonFX(shooterIDTwo);
@@ -30,24 +29,22 @@ public class Shooter extends SubsystemBase {
     this.shooterMotorTwo.set(-speed);
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  public Command setSpeedCommand(DoubleSupplier supplier) {
-    return this.runOnce(
-      () -> {
-        this.shooterMotorOne.set(supplier.getAsDouble());
-        this.shooterMotorTwo.set(-supplier.getAsDouble());
-      }
-    );
-  }
-
   public class Commands {
     public Command shoot(DoubleSupplier supplier) {
       return Shooter.this.runOnce(
         () -> Shooter.this.setSpeed(supplier.getAsDouble())
+      );
+    }
+
+    private Command shootSpeed(double speed) {
+      return Shooter.this.runOnce(
+        () -> Shooter.this.setSpeed(speed)
+      );
+    }
+
+    public Command shoot() {
+      return Shooter.this.runOnce(
+        () -> this.shootSpeed(1)
       );
     }
   }

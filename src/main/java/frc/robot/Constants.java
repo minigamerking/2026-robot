@@ -24,8 +24,8 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTERMOTORONEID = 1;
-    public static final int SHOOTERMOTORTWOID = 2;
+    public static final int SHOOTERMOTORONEID = 13;
+    public static final int SHOOTERMOTORTWOID = 14;
   }
   
   public static class TurretConstants {
@@ -66,15 +66,15 @@ public final class Constants {
                 new Translation2d(-WHEELBASELENGTH / 2, -WHEELBASEWIDTH / 2));
 
         public static final int FRONTLEFTDRIVEMOTORPORT = 1;
-        public static final int FRONTLEFTTURNMOTORPORT = 5;
+        public static final int FRONTLEFTTURNMOTORPORT = 2;
 
         public static final int FRONTRIGHTDRIVEMOTORPORT = 3;
-        public static final int FRONTRIGHTTURNMOTORPORT = 7;
+        public static final int FRONTRIGHTTURNMOTORPORT = 4;
 
-        public static final int BACKLEFTDRIVEMOTORPORT = 2;
+        public static final int BACKLEFTDRIVEMOTORPORT = 5;
         public static final int BACKLEFTTURNMOTORPORT = 6;
 
-        public static final int BACKRIGHTDRIVEMOTORPORT = 4;
+        public static final int BACKRIGHTDRIVEMOTORPORT = 7;
         public static final int BACKRIGHTTURNMOTORPORT = 8;
 
         public static final boolean FRONTLEFTDRIVEENCODERREVERSED = false;
@@ -83,8 +83,8 @@ public final class Constants {
         public static final boolean BACKRIGHTDRIVEENCODERREVERSED = false;
 
         public static final int FRONTLEFTABSENCODERPORT = 9;
-        public static final int FRONTRIGHTABSENCODERPORT = 11;
-        public static final int BACKLEFTABSENCODERPORT = 10;
+        public static final int FRONTRIGHTABSENCODERPORT = 10;
+        public static final int BACKLEFTABSENCODERPORT = 11;
         public static final int BACKRIGHTABSENCODERPORT = 12;
 
         public static final boolean FRONTLEFTABSENCODERREVERSED = true;
@@ -92,9 +92,9 @@ public final class Constants {
         public static final boolean BACKLEFTABSENCODERREVERSED = true;
         public static final boolean BACKRIGHTABSENCODERREVERSED = true;
 
-        public static final double FRONTLEFTABSENCODEROFFSET = -1.270128;
-        public static final double FRONTRIGHTABSENCODEROFFSET = -1.244053;
-        public static final double BACKLEFTABSENCODEROFFSET = -0.1702743;
-        public static final double BACKRIGHTABSENCODEROFFSET = 1.935884;
+        public static final double FRONTLEFTABSENCODEROFFSET = 0;
+        public static final double FRONTRIGHTABSENCODEROFFSET = 0;
+        public static final double BACKLEFTABSENCODEROFFSET = 0;
+        public static final double BACKRIGHTABSENCODEROFFSET = 0;
   }
 }
