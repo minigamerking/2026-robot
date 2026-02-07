@@ -6,11 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final Shooter shooter = new Shooter(ShooterConstants.SHOOTERMOTORONEID, ShooterConstants.SHOOTERMOTORTWOID);
+  //private final Shooter shooter = new Shooter(ShooterConstants.SHOOTERMOTORONEPORT, ShooterConstants.SHOOTERMOTORTWOPORT);
+  private final SwerveSubsystem swerve = new SwerveSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVERCONTROLLERPORT);
 
@@ -21,9 +24,14 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Sets the shooter to always respond to the trigger
-    this.shooter.setDefaultCommand(
+    /*this.shooter.setDefaultCommand(
       this.shooter.commands.shoot(() -> this.driverController.getRightTriggerAxis())
-    );
-    //this.driverController.rightTrigger().whileTrue(this.shooter.commands.shoot(this.driverController.getRightTriggerAxis()));
+    );*/
+
+    swerve.setDefaultCommand(new SwerveDriveCommand(
+        () -> -this.driverController.getLeftY(),
+        () -> -this.driverController.getLeftX(),
+        () -> this.driverController.getRightX()
+    ));
   }
 }

@@ -157,17 +157,26 @@ public class SwerveModule {
         return this.swerveID;
     }
 
-    public PIDController getController() {
+    public PIDController getTurningController() {
         return this.turningPidController;
     }
 
-    public void setControllerP(double p) {
+    public PIDController getDriveController() {
+        return this.driveVelocityPidController;
+    }
+
+    public void setTurningControllerP(double p) {
         Preferences.setDouble("Module_" + swerveID + "_P", p);
         this.turningPidController.setP(p);
     }
 
-    public void setControllerD(double d) {
+    public void setTurningControllerD(double d) {
         Preferences.setDouble("Module_" + swerveID + "_D", d);
         this.turningPidController.setD(d);
+    }
+
+    public void setDriveControllerP(double p) {
+        Preferences.setDouble("Module_" + this.swerveID + "_P", p);
+        this.driveVelocityPidController.setP(p);
     }
 }

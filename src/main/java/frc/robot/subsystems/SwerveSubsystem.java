@@ -25,15 +25,14 @@ import frc.robot.util.FunctionUtilities;
 
 import static edu.wpi.first.units.Units.Volts;
 
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import choreo.trajectory.SwerveSample;
 
 
 public class SwerveSubsystem extends SubsystemBase {
 
-    private final double maxSpeed = SwerveConstants.PHYSICALMAXSPEEDMPERSECR1;
+    private final double maxSpeed = SwerveConstants.PHYSICALMAXSPEEDMPERSECR2;
 
     public final SwerveModule fl_module = new SwerveModule(
         SwerveConstants.FRONTLEFTDRIVEMOTORPORT,
@@ -41,7 +40,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveConstants.FRONTLEFTDRIVEENCODERREVERSED,
         SwerveConstants.FRONTLEFTABSENCODERPORT,
         SwerveConstants.FRONTLEFTABSENCODERREVERSED,
-        0, 1);
+        0, 2);
 
     public final SwerveModule fr_module = new SwerveModule(
         SwerveConstants.FRONTRIGHTDRIVEMOTORPORT,
@@ -49,7 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveConstants.FRONTRIGHTDRIVEENCODERREVERSED,
         SwerveConstants.FRONTRIGHTABSENCODERPORT,
         SwerveConstants.FRONTRIGHTABSENCODERREVERSED,
-        1, 1);
+        1, 2);
 
     public final SwerveModule bl_module = new SwerveModule(
         SwerveConstants.BACKLEFTDRIVEMOTORPORT,
@@ -57,7 +56,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveConstants.BACKLEFTDRIVEENCODERREVERSED,
         SwerveConstants.BACKLEFTABSENCODERPORT,
         SwerveConstants.BACKLEFTABSENCODERREVERSED,
-        2, 1);
+        2, 2);
 
     public final SwerveModule br_module = new SwerveModule(
         SwerveConstants.BACKRIGHTDRIVEMOTORPORT,
@@ -65,9 +64,9 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveConstants.BACKRIGHTDRIVEENCODERREVERSED,
         SwerveConstants.BACKRIGHTABSENCODERPORT,
         SwerveConstants.BACKRIGHTABSENCODERREVERSED,
-        3, 1);
+        3, 2);
 
-    private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+    private final Pigeon2 gyro = new Pigeon2(SwerveConstants.PIGEON2PORT);
 
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(SwerveConstants.kDriveKinematics,
                                                                             getRotation2d(), 
@@ -219,16 +218,16 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("FL Module Setpoint", 
-            () -> fl_module.getController().getSetpoint(),
+            () -> fl_module.getTurningController().getSetpoint(),
             null);
         builder.addDoubleProperty("FR Module Setpoint", 
-            () -> fr_module.getController().getSetpoint(),
+            () -> fr_module.getTurningController().getSetpoint(),
             null);
         builder.addDoubleProperty("BL Module Setpoint", 
-            () -> bl_module.getController().getSetpoint(),
+            () -> bl_module.getTurningController().getSetpoint(),
             null);
         builder.addDoubleProperty("BR Module Setpoint", 
-            () -> br_module.getController().getSetpoint(),
+            () -> br_module.getTurningController().getSetpoint(),
             null);
         builder.addBooleanProperty("New Driver Mode", 
             () -> this.maxSpeedMultiplier < 1 ? true : false,
@@ -236,6 +235,9 @@ public class SwerveSubsystem extends SubsystemBase {
         builder.addDoubleProperty("Gyro", 
             () -> getRotation2d().getDegrees(),
             null);
+        builder.addDoubleArrayProperty("PID Values",
+            () -> this.getPid(),
+            (double[] pid) -> this.setPid(pid));
     }
 
     public Rotation2d getRotation2d() {
@@ -248,18 +250,39 @@ public class SwerveSubsystem extends SubsystemBase {
         this.setSpeed(mult);
     }
 
-    public void setP(double p) {
-        fl_module.setControllerP(p);
-        fr_module.setControllerP(p);
-        bl_module.setControllerP(p);
-        br_module.setControllerP(p);
+    public double[] getPid() {
+        PIDController turningController = fl_module.getTurningController();
+        double[] pidValues = {turningController.getP(),turningController.getD(),fl_module.getDriveController().getP()};
+
+        return pidValues;
+
     }
 
-    public void setD(double d) {
-        fl_module.setControllerD(d);
-        fr_module.setControllerD(d);
-        bl_module.setControllerD(d);
-        br_module.setControllerD(d);
+    public void setPid(double[] pid) {
+        this.setTurningP(pid[0]);
+        this.setTurningD(pid[1]);
+        this.setDriveP(pid[2]);
+    }
+
+    private void setTurningP(double p) {
+        fl_module.setTurningControllerP(p);
+        fr_module.setTurningControllerP(p);
+        bl_module.setTurningControllerP(p);
+        br_module.setTurningControllerP(p);
+    }
+
+    private void setTurningD(double d) {
+        fl_module.setTurningControllerD(d);
+        fr_module.setTurningControllerD(d);
+        bl_module.setTurningControllerD(d);
+        br_module.setTurningControllerD(d);
+    }
+
+    private void setDriveP(double p) {
+        fl_module.setDriveControllerP(p);
+        fr_module.setDriveControllerP(p);
+        bl_module.setDriveControllerP(p);
+        br_module.setDriveControllerP(p);
     }
 
     public void stopModules() {

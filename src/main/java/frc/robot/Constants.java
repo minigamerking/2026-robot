@@ -19,13 +19,14 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class OperatorConstants {
     public static final int DRIVERCONTROLLERPORT = 0;
+    public static final int OPERATORCONTROLLERPORT = 1;
 
     public static final double DEADBAND = 0.05;
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTERMOTORONEID = 13;
-    public static final int SHOOTERMOTORTWOID = 14;
+    public static final int SHOOTERMOTORONEPORT = 13;
+    public static final int SHOOTERMOTORTWOPORT = 14;
   }
   
   public static class TurretConstants {
@@ -65,36 +66,38 @@ public final class Constants {
                 new Translation2d(-WHEELBASELENGTH / 2, WHEELBASEWIDTH / 2),
                 new Translation2d(-WHEELBASELENGTH / 2, -WHEELBASEWIDTH / 2));
 
-        public static final int FRONTLEFTDRIVEMOTORPORT = 1;
-        public static final int FRONTLEFTTURNMOTORPORT = 2;
+    public static final int PIGEON2PORT = 15;
 
-        public static final int FRONTRIGHTDRIVEMOTORPORT = 3;
-        public static final int FRONTRIGHTTURNMOTORPORT = 4;
+    public static final int FRONTLEFTDRIVEMOTORPORT = 1;
+    public static final int FRONTLEFTTURNMOTORPORT = 2;
 
-        public static final int BACKLEFTDRIVEMOTORPORT = 5;
-        public static final int BACKLEFTTURNMOTORPORT = 6;
+    public static final int FRONTRIGHTDRIVEMOTORPORT = 3;
+    public static final int FRONTRIGHTTURNMOTORPORT = 4;
 
-        public static final int BACKRIGHTDRIVEMOTORPORT = 7;
-        public static final int BACKRIGHTTURNMOTORPORT = 8;
+    public static final int BACKLEFTDRIVEMOTORPORT = 5;
+    public static final int BACKLEFTTURNMOTORPORT = 6;
 
-        public static final boolean FRONTLEFTDRIVEENCODERREVERSED = false;
-        public static final boolean FRONTRIGHTDRIVEENCODERREVERSED = false;
-        public static final boolean BACKLEFTDRIVEENCODERREVERSED = false;
-        public static final boolean BACKRIGHTDRIVEENCODERREVERSED = false;
+    public static final int BACKRIGHTDRIVEMOTORPORT = 7;
+    public static final int BACKRIGHTTURNMOTORPORT = 8;
 
-        public static final int FRONTLEFTABSENCODERPORT = 9;
-        public static final int FRONTRIGHTABSENCODERPORT = 10;
-        public static final int BACKLEFTABSENCODERPORT = 11;
-        public static final int BACKRIGHTABSENCODERPORT = 12;
+    public static final boolean FRONTLEFTDRIVEENCODERREVERSED = false;
+    public static final boolean FRONTRIGHTDRIVEENCODERREVERSED = false;
+    public static final boolean BACKLEFTDRIVEENCODERREVERSED = false;
+    public static final boolean BACKRIGHTDRIVEENCODERREVERSED = false;
 
-        public static final boolean FRONTLEFTABSENCODERREVERSED = true;
-        public static final boolean FRONTRIGHTABSENCODERREVERSED = true;
-        public static final boolean BACKLEFTABSENCODERREVERSED = true;
-        public static final boolean BACKRIGHTABSENCODERREVERSED = true;
+    public static final int FRONTLEFTABSENCODERPORT = 9;
+    public static final int FRONTRIGHTABSENCODERPORT = 10;
+    public static final int BACKLEFTABSENCODERPORT = 11;
+    public static final int BACKRIGHTABSENCODERPORT = 12;
 
-        public static final double FRONTLEFTABSENCODEROFFSET = 0;
-        public static final double FRONTRIGHTABSENCODEROFFSET = 0;
-        public static final double BACKLEFTABSENCODEROFFSET = 0;
-        public static final double BACKRIGHTABSENCODEROFFSET = 0;
+    public static final boolean FRONTLEFTABSENCODERREVERSED = true;
+    public static final boolean FRONTRIGHTABSENCODERREVERSED = true;
+    public static final boolean BACKLEFTABSENCODERREVERSED = true;
+    public static final boolean BACKRIGHTABSENCODERREVERSED = true;
+
+    public static final double FRONTLEFTABSENCODEROFFSET = 0;
+    public static final double FRONTRIGHTABSENCODEROFFSET = 0;
+    public static final double BACKLEFTABSENCODEROFFSET = 0;
+    public static final double BACKRIGHTABSENCODEROFFSET = 0;
   }
 }
