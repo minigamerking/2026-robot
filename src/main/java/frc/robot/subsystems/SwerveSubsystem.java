@@ -32,7 +32,7 @@ import choreo.trajectory.SwerveSample;
 
 public class SwerveSubsystem extends SubsystemBase {
 
-    private final double maxSpeed = SwerveConstants.PHYSICALMAXSPEEDMPERSECR2;
+    public final double maxSpeed = SwerveConstants.PHYSICALMAXSPEEDMPERSECR2;
 
     public final SwerveModule fl_module = new SwerveModule(
         SwerveConstants.FRONTLEFTDRIVEMOTORPORT,
@@ -129,7 +129,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setChassisSpeeds(ChassisSpeeds desiredSpeed, boolean fieldRelative) {
-        System.out.println(fieldRelative);
         ChassisSpeeds speeds = (fieldRelative) ? ChassisSpeeds.fromFieldRelativeSpeeds(desiredSpeed, getRotation2d()) : desiredSpeed;
         //ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredSpeed, getRotation2d());
 
@@ -159,6 +158,8 @@ public class SwerveSubsystem extends SubsystemBase {
             ySpeed,
             rot
         );
+
+        System.out.println("Chassis Speeds: " + desiredSpeeds);
 
         setChassisSpeeds(desiredSpeeds.times(this.speedMultiplier), true);
     }
@@ -210,8 +211,6 @@ public class SwerveSubsystem extends SubsystemBase {
             // loggingStates = desiredStates;
         }
         
-        
-        
         publisher.set(loggingStates);
     }
     
@@ -252,7 +251,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public double[] getPid() {
         PIDController turningController = fl_module.getTurningController();
-        double[] pidValues = {turningController.getP(),turningController.getD(),fl_module.getDriveController().getP()};
+        double[] pidValues = {turningController.getP(),turningController.getD()};
 
         return pidValues;
 
@@ -261,7 +260,6 @@ public class SwerveSubsystem extends SubsystemBase {
     public void setPid(double[] pid) {
         this.setTurningP(pid[0]);
         this.setTurningD(pid[1]);
-        this.setDriveP(pid[2]);
     }
 
     private void setTurningP(double p) {
@@ -276,13 +274,6 @@ public class SwerveSubsystem extends SubsystemBase {
         fr_module.setTurningControllerD(d);
         bl_module.setTurningControllerD(d);
         br_module.setTurningControllerD(d);
-    }
-
-    private void setDriveP(double p) {
-        fl_module.setDriveControllerP(p);
-        fr_module.setDriveControllerP(p);
-        bl_module.setDriveControllerP(p);
-        br_module.setDriveControllerP(p);
     }
 
     public void stopModules() {

@@ -21,8 +21,7 @@ public class SwerveModule {
     private final TalonFX turningMotor;
 
     private final PIDController turningPidController;
-    private final PIDController driveVelocityPidController;
-    private final SlewRateLimiter driveVelocityLimiter = new SlewRateLimiter(3);;
+    private final SlewRateLimiter driveVelocityLimiter = new SlewRateLimiter(15, -25, 0);
 
     private final CANcoder absoluteEncoder;
     private final boolean absoluteEncoderReversed;
@@ -41,8 +40,10 @@ public class SwerveModule {
         this.absoluteEncoderReversed = absoluteEncoderReversed;
         this.absoluteEncoder = new CANcoder(absoluteEncoderId);
 
+        Preferences.initDouble("Module" + this.swerveID + "VelocityI", 1);
+
         CANcoderConfiguration config = new CANcoderConfiguration();
-        config.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(Preferences.getDouble("Module" + this.swerveID + "Zero", 0)).getRotations();
+        config.MagnetSensor.MagnetOffset = Rotation2d.fromRadians(Preferences.getDouble("Module" + this.swerveID + "Zero", 0)).getRotations();
         this.absoluteEncoder.getConfigurator().apply(config);
 
         this.driveMotor = new TalonFX(driveMotorId);
@@ -52,24 +53,17 @@ public class SwerveModule {
         this.turningMotor.getConfigurator().apply(getTurningConfig());
 
         this.turningPidController = new PIDController(
-            Preferences.getDouble("Module" + this.swerveID + "P", SwerveConstants.SWERVETURNINGP),
+            Preferences.getDouble("Module" + this.swerveID + "TurningP", SwerveConstants.SWERVETURNINGP),
             0,
-            Preferences.getDouble("Module" + this.swerveID + "D", SwerveConstants.SWERVETURNINGD)
+            Preferences.getDouble("Module" + this.swerveID + "TurningD", SwerveConstants.SWERVETURNINGD)
         );
-        this.turningPidController.enableContinuousInput(-180, 180);
-        this.turningPidController.setTolerance(0.2);
-        
-        this.driveVelocityPidController = new PIDController(
-            Preferences.getDouble("Module" + this.swerveID + "VelocityP", 1),
-            0,
-            0
-        );
-        this.driveVelocityPidController.setTolerance(0.2);
+        this.turningPidController.enableContinuousInput(-Math.PI, Math.PI);
+        this.turningPidController.setTolerance(0.1);
 
         this.driveRotationToMeter = (gearRatio == 1) ? SwerveConstants.ROTATIONSTOMETERSR1 : (gearRatio == 2) ? SwerveConstants.ROTATIONSTOMETERSR2 : SwerveConstants.ROTATIONSTOMETERSR3;
         this.driveMaxSpeed = (gearRatio == 1) ? SwerveConstants.PHYSICALMAXSPEEDMPERSECR1 : (gearRatio == 2) ? SwerveConstants.PHYSICALMAXSPEEDMPERSECR2 : SwerveConstants.PHYSICALMAXSPEEDMPERSECR3;
 
-        this.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(getAbsoluteEncoderDeg())));
+        this.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(getAbsoluteEncoderRad())));
     }
 
     private TalonFXConfiguration getDriveConfig(boolean reversed) {
@@ -106,11 +100,22 @@ public class SwerveModule {
         return angle.getDegrees();
     }
 
+    public double getAbsoluteEncoderRad() {
+        double rotations = absoluteEncoder.getAbsolutePosition().getValueAsDouble();
+        Rotation2d angle = Rotation2d.fromRotations(rotations);
+
+        if (absoluteEncoderReversed) {
+            angle = angle.unaryMinus();
+        }
+
+        return angle.getRadians();
+    }
+
     public void resetEncoders() {
         // System.out.println("1 " + this.swerveID + " " + getAbsoluteEncoderDeg() + "\n");
         this.driveMotor.setPosition(0);
-        double offset = Rotation2d.fromDegrees(Preferences.getDouble("Module" + this.swerveID + "Zero", 0)).plus(Rotation2d.fromDegrees(getAbsoluteEncoderDeg())).getRotations();
-        Preferences.setDouble("Module" + this.swerveID + "Zero", Rotation2d.fromRotations(offset).getDegrees());
+        double offset = Rotation2d.fromRadians(Preferences.getDouble("Module" + this.swerveID + "Zero", 0)).plus(Rotation2d.fromRadians(getAbsoluteEncoderRad())).getRotations();
+        Preferences.setDouble("Module" + this.swerveID + "Zero", Rotation2d.fromRotations(offset).getRadians());
         CANcoderConfiguration config = new CANcoderConfiguration();
         config.MagnetSensor.MagnetOffset = offset;
         this.absoluteEncoder.getConfigurator().apply(config);
@@ -118,7 +123,7 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), Rotation2d.fromDegrees(getAbsoluteEncoderDeg()));
+        return new SwerveModuleState(getDriveVelocity(), Rotation2d.fromRadians(getAbsoluteEncoderRad()));
     }
 
     public void runVolts(double volts) {
@@ -127,30 +132,31 @@ public class SwerveModule {
 
     public void periodic() {
         double limitedSpeed = driveVelocityLimiter.calculate(this.state.speedMetersPerSecond);
-        this.driveVelocityPidController.setSetpoint(limitedSpeed);
+        SmartDashboard.putNumber(this.swerveID + " Slewed Velocity", limitedSpeed);
         //System.out.println(this.swerveID + " Desired Angle: " + this.state.angle.getDegrees());
-        this.driveMotor.set(this.driveVelocityPidController.calculate(this.getDriveVelocity()) / this.driveMaxSpeed);
-        this.turningMotor.setVoltage(this.turningPidController.calculate(getAbsoluteEncoderDeg()));
-        SmartDashboard.putNumber(this.swerveID + " Module Angle: ", getAbsoluteEncoderDeg());
+        this.driveMotor.set(limitedSpeed / this.driveMaxSpeed);
+        this.turningMotor.setVoltage(this.turningPidController.calculate(getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber(this.swerveID + " Velocity", this.getDriveVelocity());
     }
 
     public void setDesiredState(SwerveModuleState desiredState) {
-        if (Math.abs(desiredState.speedMetersPerSecond) < 0.01) {
+        if (Math.abs(desiredState.speedMetersPerSecond) < 0.05) {
             desiredState.speedMetersPerSecond = 0;
         }
-        desiredState.optimize(Rotation2d.fromDegrees(getAbsoluteEncoderDeg()));
+        desiredState.optimize(getState().angle);
         this.state = desiredState;
-        turningPidController.setSetpoint(this.state.angle.getDegrees());
+        SmartDashboard.putNumber(this.swerveID+ " Velocity Setpoint", this.state.speedMetersPerSecond);
+        turningPidController.setSetpoint(this.state.angle.getRadians());
     }
 
     public SwerveModulePosition getPosition() {
-        SwerveModulePosition position = new SwerveModulePosition(getDrivePosition(), Rotation2d.fromDegrees(getAbsoluteEncoderDeg()));
+        SwerveModulePosition position = new SwerveModulePosition(getDrivePosition(), Rotation2d.fromRadians(getAbsoluteEncoderRad()));
         return position;
     }
 
     public void stop() {
-        driveMotor.set(0);
-        turningMotor.set(0);
+        this.driveMotor.set(0);
+        this.turningMotor.set(0);
     }
 
     public int getSwerveID() {
@@ -161,22 +167,13 @@ public class SwerveModule {
         return this.turningPidController;
     }
 
-    public PIDController getDriveController() {
-        return this.driveVelocityPidController;
-    }
-
     public void setTurningControllerP(double p) {
-        Preferences.setDouble("Module_" + swerveID + "_P", p);
+        Preferences.setDouble("Module" + swerveID + "TurningP", p);
         this.turningPidController.setP(p);
     }
 
     public void setTurningControllerD(double d) {
-        Preferences.setDouble("Module_" + swerveID + "_D", d);
+        Preferences.setDouble("Module" + swerveID + "TurningD", d);
         this.turningPidController.setD(d);
-    }
-
-    public void setDriveControllerP(double p) {
-        Preferences.setDouble("Module_" + this.swerveID + "_P", p);
-        this.driveVelocityPidController.setP(p);
     }
 }

@@ -9,6 +9,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -18,6 +19,8 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVERCONTROLLERPORT);
 
   public RobotContainer() {
+    SmartDashboard.putData("Reset Headings", swerve.resetSwerveHeadings());
+    SmartDashboard.putData("Swerve", swerve);
     // Configure the controller bindings
     configureBindings();
   }
@@ -31,7 +34,8 @@ public class RobotContainer {
     swerve.setDefaultCommand(new SwerveDriveCommand(
         () -> -this.driverController.getLeftY(),
         () -> -this.driverController.getLeftX(),
-        () -> this.driverController.getRightX()
+        () -> this.driverController.getRightX(),
+        swerve
     ));
   }
 }

@@ -43,13 +43,15 @@ public final class Constants {
     public static final double WHEELBASELENGTH = Units.inchesToMeters(27.125);
     public static final double WHEELBASEWIDTH = Units.inchesToMeters(16);
 
-    public static final int SWERVETURNINGP = 1;
-    public static final int SWERVETURNINGI = 0;
-    public static final int SWERVETURNINGD = 0;
+    public static final double SWERVETURNINGP = 2.5;
+    public static final double SWERVETURNINGI = 0;
+    public static final double SWERVETURNINGD = 0;
 
-    public static final double PHYSICALMAXSPEEDMPERSECR1 = 14.4;
-    public static final double PHYSICALMAXSPEEDMPERSECR2 = 16.8;
-    public static final double PHYSICALMAXSPEEDMPERSECR3 = 19.2;
+    public static final double PHYSICALMAXSPEEDMPERSECR1 = Units.feetToMeters(14.4);
+    public static final double PHYSICALMAXSPEEDMPERSECR2 = Units.feetToMeters(16.8);
+    public static final double PHYSICALMAXSPEEDMPERSECR3 = Units.feetToMeters(19.2);
+
+    public static final double TELEOPSPEEDMULTIPLIER = 0.75;
 
     public static final double DRIVEMOTORGEARRATIOR1 = 7.03;
     public static final double DRIVEMOTORGEARRATIOR2 = 6.03;
@@ -90,10 +92,10 @@ public final class Constants {
     public static final int BACKLEFTABSENCODERPORT = 11;
     public static final int BACKRIGHTABSENCODERPORT = 12;
 
-    public static final boolean FRONTLEFTABSENCODERREVERSED = true;
-    public static final boolean FRONTRIGHTABSENCODERREVERSED = true;
-    public static final boolean BACKLEFTABSENCODERREVERSED = true;
-    public static final boolean BACKRIGHTABSENCODERREVERSED = true;
+    public static final boolean FRONTLEFTABSENCODERREVERSED = false;
+    public static final boolean FRONTRIGHTABSENCODERREVERSED = false;
+    public static final boolean BACKLEFTABSENCODERREVERSED = false;
+    public static final boolean BACKRIGHTABSENCODERREVERSED = false;
 
     public static final double FRONTLEFTABSENCODEROFFSET = 0;
     public static final double FRONTRIGHTABSENCODEROFFSET = 0;
