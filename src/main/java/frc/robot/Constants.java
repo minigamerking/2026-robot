@@ -34,7 +34,14 @@ public final class Constants {
     public static final int TURRETI = 0;
     public static final int TURRETD = 0;
 
-    public static final double TURRETMAXANGLE = 90;
+    public static int TURRETMOTORPORT = 16;
+
+    public static final double TURRETDIAMETER = Units.inchesToMeters(8.625);
+    public static final double ROTATIONSTOMETERS = (TURRETDIAMETER * Math.PI);
+
+    public static final boolean ENCODERREVERSED = false;
+
+    public static final double TURRETMAXANGLE = 360;
     public static final double TURRETMINANGLE = 0;
   }
 
