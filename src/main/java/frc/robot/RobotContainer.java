@@ -15,25 +15,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  //private final Shooter shooter = new Shooter(ShooterConstants.SHOOTERMOTORONEPORT, ShooterConstants.SHOOTERMOTORTWOPORT);
+  private final Shooter shooter = new Shooter(ShooterConstants.TOPSHOOTERMOTORPORT, ShooterConstants.BOTTOMSHOOTERMOTORPORT);
   private final SwerveSubsystem swerve = new SwerveSubsystem();
-  private final Turret turret = new Turret(TurretConstants.TURRETMOTORPORT, 1, TurretConstants.ENCODERREVERSED);
+  //private final Turret turret = new Turret(TurretConstants.TURRETMOTORPORT, 1, TurretConstants.ENCODERREVERSED);
 
   private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVERCONTROLLERPORT);
 
   public RobotContainer() {
     SmartDashboard.putData("Reset Headings", swerve.resetSwerveHeadings());
     SmartDashboard.putData("Swerve", swerve);
-    SmartDashboard.putData("Turret", turret);
+    //SmartDashboard.putData("Turret", turret);
     // Configure the controller bindings
     configureBindings();
   }
 
   private void configureBindings() {
     // Sets the shooter to always respond to the trigger
-    /*this.shooter.setDefaultCommand(
-      this.shooter.commands.shoot(() -> this.driverController.getRightTriggerAxis())
-    );*/
+    this.shooter.setDefaultCommand(
+      this.shooter.commands.shoot(() -> this.driverController.getRightTriggerAxis(), () -> this.driverController.getLeftTriggerAxis())
+    );
 
     swerve.setDefaultCommand(new SwerveDriveCommand(
         () -> -this.driverController.getLeftY(),

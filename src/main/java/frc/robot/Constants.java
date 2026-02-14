@@ -25,8 +25,8 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-    public static final int SHOOTERMOTORONEPORT = 13;
-    public static final int SHOOTERMOTORTWOPORT = 14;
+    public static final int TOPSHOOTERMOTORPORT = 13;
+    public static final int BOTTOMSHOOTERMOTORPORT = 14;
   }
   
   public static class TurretConstants {

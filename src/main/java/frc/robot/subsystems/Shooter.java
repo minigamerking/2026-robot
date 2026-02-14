@@ -24,27 +24,21 @@ public class Shooter extends SubsystemBase {
     this.shooterMotorTwo = new TalonFX(shooterIDTwo);
   }
 
-  public void setSpeed(double speed) {
+  public void setSpeedTopMotor(double speed) {
     this.shooterMotorOne.set(speed);
-    this.shooterMotorTwo.set(-speed);
+  }
+
+  public void setSpeedBottomMotor(double speed) {
+    this.shooterMotorTwo.set(speed);
   }
 
   public class Commands {
-    public Command shoot(DoubleSupplier supplier) {
+    public Command shoot(DoubleSupplier topSupplier, DoubleSupplier bottomSupplier) {
       return Shooter.this.runOnce(
-        () -> Shooter.this.setSpeed(supplier.getAsDouble())
-      );
-    }
-
-    private Command shootSpeed(double speed) {
-      return Shooter.this.runOnce(
-        () -> Shooter.this.setSpeed(speed)
-      );
-    }
-
-    public Command shoot() {
-      return Shooter.this.runOnce(
-        () -> this.shootSpeed(1)
+        () -> {
+          Shooter.this.setSpeedTopMotor(topSupplier.getAsDouble());
+          Shooter.this.setSpeedBottomMotor(bottomSupplier.getAsDouble());
+        }
       );
     }
   }
