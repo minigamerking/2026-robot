@@ -60,8 +60,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setSpeed(double topSpeed, double bottomSpeed) {
-    this.topTargetRPS = topSpeed;
-    this.bottomTargetRPS = bottomSpeed;
+    this.topTargetRPS = topSpeed * 100;
+    this.bottomTargetRPS = bottomSpeed * 100;
   }
 
   @Override
