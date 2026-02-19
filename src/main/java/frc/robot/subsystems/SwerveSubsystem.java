@@ -159,8 +159,6 @@ public class SwerveSubsystem extends SubsystemBase {
             rot
         );
 
-        System.out.println("Chassis Speeds: " + desiredSpeeds);
-
         setChassisSpeeds(desiredSpeeds.times(this.speedMultiplier), true);
     }
 
