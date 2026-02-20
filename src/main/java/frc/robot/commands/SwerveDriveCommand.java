@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.util.FunctionUtilities;
 
 public class SwerveDriveCommand extends Command {
     private final DoubleSupplier xSupplier;
@@ -35,7 +36,7 @@ public class SwerveDriveCommand extends Command {
 
         x *= swerve.maxSpeed * SwerveConstants.TELEOPSPEEDMULTIPLIER;
         y *= swerve.maxSpeed * SwerveConstants.TELEOPSPEEDMULTIPLIER;
-        rotation *= swerve.maxSpeed  * SwerveConstants.TELEOPSPEEDMULTIPLIER;
+        rotation *= swerve.maxSpeed * (Math.PI / 2)  * SwerveConstants.TELEOPSPEEDMULTIPLIER;
 
         //System.out.println("X: " + x + " Y: " + y + " Rotation: " + rotation);
 

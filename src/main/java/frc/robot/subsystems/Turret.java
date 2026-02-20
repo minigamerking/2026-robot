@@ -1,11 +1,16 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
 
@@ -17,20 +22,21 @@ public class Turret extends SubsystemBase {
     // PID controller for the angle of turret
     private final PIDController anglePidController;
 
-    // Absolute encoder used to get the current angle of the turret
-    //private final CANcoder absEncoder;
-
-    // If the absolute encoder is reversed
     private final boolean absEncoderReversed;
+
+    public final Commands commands = new Commands();
 
     public Turret(int turretID, int encoderID, boolean absEncoderReversed) {
         // Initializations
         this.turretMotor = new TalonFX(turretID);
 
+        Preferences.initDouble("TurretP", TurretConstants.TURRETP);
+        Preferences.initDouble("TurretD", TurretConstants.TURRETD);
+
         this.anglePidController = new PIDController(
-            TurretConstants.TURRETP,
-            TurretConstants.TURRETI,
-            TurretConstants.TURRETD
+            Preferences.getDouble("TurretP", TurretConstants.TURRETP),
+            0,
+            Preferences.getDouble("TurretD", TurretConstants.TURRETD)
         );
 
         this.anglePidController.setSetpoint(0);
@@ -41,10 +47,6 @@ public class Turret extends SubsystemBase {
         Preferences.initDouble("TurretP", TurretConstants.TURRETP);
     }
 
-    /*  
-     * Gets the angle of the absolute encoder, in rotations,
-     * and then converts to degrees and reverses if necessary 
-     */
     public double getAngle() {
         double rotations = this.turretMotor.getPosition().getValueAsDouble();
         Rotation2d angle = Rotation2d.fromRotations(rotations);
@@ -53,7 +55,7 @@ public class Turret extends SubsystemBase {
             angle.unaryMinus();
         }
 
-        return angle.getRadians();
+        return angle.getRadians() * 11/136;
     }
     
     /*
@@ -67,10 +69,6 @@ public class Turret extends SubsystemBase {
         absEncoder.getConfigurator().apply(config);
     }*/
 
-
-    /*
-     * Called every 20 ms (command schedule loop)
-     */
     @Override
     public void periodic() {
         // Gets the pid controller's output
@@ -95,8 +93,26 @@ public class Turret extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty(
             "Turret Angle",
-            this::getAngle,
-            (double angle) -> this.anglePidController.setSetpoint(angle)
+            () -> Units.radiansToDegrees(getAngle()),
+            (double angle) -> this.anglePidController.setSetpoint(Units.degreesToRadians(angle))
         );
+        builder.addDoubleArrayProperty(
+            "Turret PID", 
+            () -> new double[]{this.anglePidController.getP(), this.anglePidController.getD()}, 
+            (double[] pd) -> {
+                this.anglePidController.setP(pd[0]);
+                this.anglePidController.setD(pd[1]);
+            }
+        );
+    }
+
+    public class Commands {
+        public Command changeAngle(DoubleSupplier additionSupplier) {
+            return Turret.this.run(
+                () -> Turret.this.anglePidController.setSetpoint(Turret.this.anglePidController.getSetpoint() + Units.degreesToRadians(additionSupplier.getAsDouble()))
+            ).finallyDo(
+                () -> {}
+            );
+        }
     }
 }
