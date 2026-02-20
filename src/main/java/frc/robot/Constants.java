@@ -21,7 +21,7 @@ public final class Constants {
     public static final int DRIVERCONTROLLERPORT = 0;
     public static final int OPERATORCONTROLLERPORT = 1;
 
-    public static final double DEADBAND = 0.05;
+    public static final double DEADBAND = 0.1;
   }
 
   public static class ShooterConstants {
@@ -101,7 +101,7 @@ public final class Constants {
     public static final int BACKRIGHTTURNMOTORPORT = 8;
 
     public static final boolean FRONTLEFTDRIVEENCODERREVERSED = false;
-    public static final boolean FRONTRIGHTDRIVEENCODERREVERSED = false;
+    public static final boolean FRONTRIGHTDRIVEENCODERREVERSED = true;
     public static final boolean BACKLEFTDRIVEENCODERREVERSED = false;
     public static final boolean BACKRIGHTDRIVEENCODERREVERSED = false;
 

@@ -35,7 +35,7 @@ public class SwerveDriveCommand extends Command {
 
         x *= swerve.maxSpeed * SwerveConstants.TELEOPSPEEDMULTIPLIER;
         y *= swerve.maxSpeed * SwerveConstants.TELEOPSPEEDMULTIPLIER;
-        rotation *= swerve.maxSpeed  * SwerveConstants.TELEOPSPEEDMULTIPLIER;
+        rotation *= swerve.maxSpeed  * (Math.PI / 2) * SwerveConstants.TELEOPSPEEDMULTIPLIER;
 
         //System.out.println("X: " + x + " Y: " + y + " Rotation: " + rotation);
 

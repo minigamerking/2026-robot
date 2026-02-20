@@ -214,17 +214,17 @@ public class SwerveSubsystem extends SubsystemBase {
     
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("FL Module Setpoint", 
-            () -> fl_module.getTurningController().getSetpoint(),
+        builder.addDoubleProperty("FL Module Angle", 
+            () -> fl_module.getAbsoluteEncoderDeg(),
             null);
-        builder.addDoubleProperty("FR Module Setpoint", 
-            () -> fr_module.getTurningController().getSetpoint(),
+        builder.addDoubleProperty("FR Module Angle", 
+            () -> fr_module.getAbsoluteEncoderDeg(),
             null);
-        builder.addDoubleProperty("BL Module Setpoint", 
-            () -> bl_module.getTurningController().getSetpoint(),
+        builder.addDoubleProperty("BL Module Angle", 
+            () -> bl_module.getAbsoluteEncoderDeg(),
             null);
-        builder.addDoubleProperty("BR Module Setpoint", 
-            () -> br_module.getTurningController().getSetpoint(),
+        builder.addDoubleProperty("BR Module Angle", 
+            () -> br_module.getAbsoluteEncoderDeg(),
             null);
         builder.addBooleanProperty("New Driver Mode", 
             () -> this.maxSpeedMultiplier < 1 ? true : false,
