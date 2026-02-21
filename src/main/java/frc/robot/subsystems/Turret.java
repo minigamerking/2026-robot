@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -21,6 +22,8 @@ public class Turret extends SubsystemBase {
     // PID controller for the angle of turret
     private final PIDController anglePidController;
 
+    private final SimpleMotorFeedforward angleFeedForward;
+
     // Absolute encoder used to get the current angle of the turret
     //private final CANcoder absEncoder;
 
@@ -33,21 +36,18 @@ public class Turret extends SubsystemBase {
         // Initializations
         this.turretMotor = new TalonFX(turretID);
 
-        Preferences.initDouble("TurretP", TurretConstants.TURRETP);
-        Preferences.initDouble("TurretD", TurretConstants.TURRETD);
-
         this.anglePidController = new PIDController(
             Preferences.getDouble("TurretP", TurretConstants.TURRETP),
             0,
             Preferences.getDouble("TurretD", TurretConstants.TURRETD)
         );
 
+        this.angleFeedForward = new SimpleMotorFeedforward(0, Preferences.getDouble("TurretV", TurretConstants.TURRETV));
+
         this.anglePidController.setSetpoint(0);
 
         //this.absEncoder = new CANcoder(encoderID);
         this.absEncoderReversed = absEncoderReversed;
-
-        Preferences.initDouble("TurretP", TurretConstants.TURRETP);
     }
 
     /*  
@@ -84,7 +84,8 @@ public class Turret extends SubsystemBase {
     public void periodic() {
         // Gets the pid controller's output
         double currentAngle = this.getAngle();
-        double calculatedOutput = this.anglePidController.calculate(currentAngle);
+        double feedforward = this.angleFeedForward.calculate(this.anglePidController.getSetpoint());
+        double calculatedOutput = this.anglePidController.calculate(currentAngle) + feedforward;
 
         // Makes sure the turret doesn't over extend
         boolean overrun = (
@@ -108,11 +109,12 @@ public class Turret extends SubsystemBase {
             (double angle) -> this.anglePidController.setSetpoint(Units.degreesToRadians(angle))
         );
         builder.addDoubleArrayProperty(
-            "Turret PID", 
-            () -> new double[]{this.anglePidController.getP(), this.anglePidController.getD()}, 
-            (double[] pd) -> {
-                this.anglePidController.setP(pd[0]);
-                this.anglePidController.setD(pd[1]);
+            "Turret PID + KV", 
+            () -> new double[]{this.anglePidController.getP(), this.anglePidController.getD(), this.angleFeedForward.getKv()}, 
+            (double[] pdv) -> {
+                this.anglePidController.setP(pdv[0]);
+                this.anglePidController.setD(pdv[1]);
+                this.angleFeedForward.setKv(pdv[2]);
             }
         );
     }

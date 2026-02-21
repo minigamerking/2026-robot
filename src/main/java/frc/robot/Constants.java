@@ -41,9 +41,10 @@ public final class Constants {
   }
   
   public static class TurretConstants {
-    public static final int TURRETP = 1;
-    public static final int TURRETI = 0;
-    public static final int TURRETD = 0;
+    public static final double TURRETP = 1;
+    public static final double TURRETI = 0;
+    public static final double TURRETD = 0;
+    public static final double TURRETV = 0.1;
 
     public static int TURRETMOTORPORT = 16;
 
@@ -54,6 +55,10 @@ public final class Constants {
 
     public static final double TURRETMAXANGLE = 360;
     public static final double TURRETMINANGLE = 0;
+  }
+
+  public static class HighwayConstants {
+    public static final int HIGHWAYPORT = 17;
   }
 
   public static class SwerveConstants {

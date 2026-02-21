@@ -87,11 +87,6 @@ public class Shooter extends SubsystemBase {
       () -> new double[]{this.topShooterMotor.getSupplyCurrent().getValueAsDouble(), this.bottomShooterMotor.getSupplyCurrent().getValueAsDouble()}, 
       null
     );
-    builder.addDoubleArrayProperty(
-      "Motor Voltage Draw", 
-      () -> new double[]{this.topShooterMotor.getMotorVoltage().getValueAsDouble(), this.bottomShooterMotor.getMotorVoltage().getValueAsDouble()}, 
-      null
-    );
   }
 
   public class Commands {
@@ -105,9 +100,9 @@ public class Shooter extends SubsystemBase {
 
     public Command shoot() {
       return Shooter.this.run(
-        () -> Shooter.this.setSpeed(FunctionUtilities.applyClamp(Shooter.this.maxSpeed * 3, 0, 1), Shooter.this.maxSpeed)
+        () -> Shooter.this.commands.shoot(() -> FunctionUtilities.applyClamp(Shooter.this.maxSpeed * 3, 0, 1), () -> Shooter.this.maxSpeed)
       ).finallyDo(
-        () -> Shooter.this.setSpeed(0, 0)
+        () -> Shooter.this.commands.stopShooting()
       );
     }
 
