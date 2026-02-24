@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,8 +44,11 @@ public class Shooter extends SubsystemBase {
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     config.Slot0.kV = ShooterConstants.TOPMOTORKV;
+    config.Slot0.kS = ShooterConstants.TOPMOTORKS;
     config.Slot0.kA = ShooterConstants.TOPMOTORKA;
     config.Slot0.kP = ShooterConstants.TOPMOTORKP;
+
+    config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
     return config;
   }
@@ -53,8 +57,11 @@ public class Shooter extends SubsystemBase {
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     config.Slot0.kV = ShooterConstants.BOTTOMMOTORKV;
+    config.Slot0.kA = ShooterConstants.BOTTOMMOTORKS;
     config.Slot0.kA = ShooterConstants.BOTTOMMOTORKA;
     config.Slot0.kP = ShooterConstants.BOTTOMMOTORKP;
+
+    config.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
     return config;
   }

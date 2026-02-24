@@ -34,10 +34,12 @@ public final class Constants {
     public static final double TOPMOTORKV = 0.37;
     public static final double TOPMOTORKA = 0.3;
     public static final double TOPMOTORKP = 0.88;
+    public static final double TOPMOTORKS = 0.88;
 
     public static final double BOTTOMMOTORKV = 0.56;
     public static final double BOTTOMMOTORKA = 0.13;
     public static final double BOTTOMMOTORKP = 1.19;
+    public static final double BOTTOMMOTORKS = 0.88;
   }
   
   public static class TurretConstants {

@@ -16,16 +16,15 @@ public class Highway extends SubsystemBase {
 
     public class Commands {
         public Command forward() {
-            return Highway.this.run(
-                () -> Highway.this.highwayMotor.set(0.25)
-            ).finallyDo(
+            return Highway.this.startEnd(
+                () -> Highway.this.highwayMotor.set(-0.5),
                 () -> Highway.this.highwayMotor.set(0)
             );
         }
 
         public Command backward() {
             return Highway.this.run(
-                () -> Highway.this.highwayMotor.set(-0.25)
+                () -> Highway.this.highwayMotor.set(0.5)
             ).finallyDo(
                 () -> Highway.this.highwayMotor.set(0)
             );
