@@ -11,16 +11,24 @@ import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Highway;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Vision;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
+
+  // Initializing the subsystems
   private final Shooter shooter = new Shooter(ShooterConstants.TOPSHOOTERMOTORPORT, ShooterConstants.BOTTOMSHOOTERMOTORPORT);
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final Highway highway = new Highway(HighwayConstants.HIGHWAYPORT);
+  private final Vision vision = new Vision();
+  public final Autons autons = new Autons(swerve, shooter, highway);
   //private final Hood hood = new Hood(ShooterConstants.LEFTLINEARSERVOPORT, ShooterConstants.RIGHTLINEARSERVOPORT);
   //private final Turret turret = new Turret(TurretConstants.TURRETMOTORPORT, 1, TurretConstants.ENCODERREVERSED);
 
@@ -29,28 +37,42 @@ public class RobotContainer {
   public RobotContainer() {
     SmartDashboard.putData("Reset Headings", swerve.resetSwerveHeadings());
     SmartDashboard.putData("Swerve", swerve);
+    SmartDashboard.putData("Vision", vision);
     //SmartDashboard.putData("Hood", hood);
     SmartDashboard.putData("Shooter", shooter);
     //SmartDashboard.putData("Turret", turret);
+
     // Configure the controller bindings
     configureBindings();
   }
 
+  /**
+   * Method for adding the controller bindings to the controllers
+   */
   private void configureBindings() {
-    // Sets the shooter to always respond to the trigger
-    this.driverController.a().whileTrue(this.shooter.commands.shoot());//.alongWith(this.shooter.commands.increaseSpeed(() -> 0.025).onlyWhile(() -> true)));
+    this.driverController.a().whileTrue(this.shooter.commands.shootVelocity());//.alongWith(this.shooter.commands.increaseSpeed(() -> 0.025).onlyWhile(() -> true)));
     //this.driverController.povLeft().whileTrue(turret.commands.changeAngle(() -> 5));
     //this.driverController.povRight().whileTrue(turret.commands.changeAngle(() -> -5));
     this.driverController.rightTrigger().whileTrue(this.highway.commands.forward());
     //this.driverController.leftTrigger().whileTrue(this.highway.commands.backward());
 
-      swerve.setDefaultCommand(new SwerveDriveCommand(
-        () -> -this.driverController.getLeftY(),
-        () -> -this.driverController.getLeftX(),
-        () -> -this.driverController.getRightX(),
-        swerve
+    swerve.setDefaultCommand(new SwerveDriveCommand(
+      () -> -this.driverController.getLeftY(),
+      () -> -this.driverController.getLeftX(),
+      () -> -this.driverController.getRightX(),
+      swerve
     ));
 
     this.driverController.start().onTrue(this.swerve.resetHeading());
+  }
+
+  public void periodic() {
+    // Gets the limelight measurements and adds them to the swerve pose estimator
+    for (var measurement : vision.getVisionMeasurements()) {
+      swerve.addVisionMeasurement(
+        measurement.pose(),
+        measurement.timestampSeconds()
+      );
+    }
   }
 }
